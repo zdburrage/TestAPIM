@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApimServiceName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "properties": {
+        "secret": true,
+        "displayName": "Logger-Credentials-5e665f8d6b781c1028437cbb",
+        "value": "965b77b8-798e-4fe6-a317-9fcd41efa65b"
+      },
+      "name": "[concat(parameters('ApimServiceName'), '/5e665f8d6b781c1028437cba')]",
+      "type": "Microsoft.ApiManagement/service/properties",
+      "apiVersion": "2019-01-01"
+    },
+    {
+      "properties": {
+        "tags": [
+          "key",
+          "function",
+          "auto"
+        ],
+        "secret": true,
+        "displayName": "servicekingwebservices-key",
+        "value": "4hm0GgwUqEER9AK9JNyc/+Z5FHrpxxMY3eLVJegiq3MvG3W4eje03g=="
+      },
+      "name": "[concat(parameters('ApimServiceName'), '/servicekingwebservices-key')]",
+      "type": "Microsoft.ApiManagement/service/properties",
+      "apiVersion": "2019-01-01"
+    },
+    {
+      "properties": {
+        "tags": [
+          "key",
+          "function",
+          "auto"
+        ],
+        "secret": true,
+        "displayName": "sktestapi-key",
+        "value": "s/o+4RTepjz41NKn/yliUKIaEL2pnrP9By4qC9tQBAzvf+mYbKdjdQ=="
+      },
+      "name": "[concat(parameters('ApimServiceName'), '/sktestapi-key')]",
+      "type": "Microsoft.ApiManagement/service/properties",
+      "apiVersion": "2019-01-01"
+    }
+  ]
+}

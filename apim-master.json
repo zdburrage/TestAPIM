@@ -1,0 +1,142 @@
+{ 
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "TemplatesStorageAccount": {
+        "type": "string",
+        "defaultValue": "https://skdevwebservicessa.blob.core.windows.net/templates/"
+      },
+      "TemplatesStorageAccountSASToken": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "APIManagementSku": {
+        "type": "string",
+        "defaultValue": "Developer"
+      },
+      "APIManagementSkuCapacity": {
+        "type": "string",
+        "defaultValue": "1"
+      },
+      "APIManagementInstanceName": {
+        "type": "string",
+        "defaultValue": "skdeploymenttest"
+      },
+      "PublisherName": {
+        "type": "string",
+        "defaultValue": "Zachary Burrage"
+      },
+      "PublisherEmail": {
+        "type": "string",
+        "defaultValue": "zachary.burrage@serviceking.com"
+      }
+    },
+    "resources": [
+        {
+           "apiVersion": "2017-05-10",
+           "name": "instanceTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev--instance.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementSku": {"value": "[parameters('APIManagementSku')]" },
+                "APIManagementSkuCapacity": {"value": "[parameters('APIManagementSkuCapacity')]" },
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" },
+                "PublisherName": {"value": "[parameters('PublisherName')]" },
+                "PublisherEmail": {"value": "[parameters('PublisherEmail')]" }
+              }
+           }
+        },
+        {
+           "apiVersion": "2017-05-10",
+           "name": "backendsTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev-backends.template.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" }
+              }
+           },
+           "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'instanceTemplate')]"
+           ]
+        },
+        {
+           "apiVersion": "2017-05-10",
+           "name": "namedValuesTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev-namedValues.template.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" }
+              }
+           },
+           "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'instanceTemplate')]"
+           ]
+        },
+        {
+           "apiVersion": "2017-05-10",
+           "name": "productsTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev-products.template.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" }
+              }
+           },
+           "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'instanceTemplate')]"
+           ]
+        },
+        {
+           "apiVersion": "2017-05-10",
+           "name": "policiesTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev-globaServicePolicy.template.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" }
+              }
+           },
+           "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'productsTemplate')]"
+           ]
+        },
+        {
+           "apiVersion": "2017-05-10",
+           "name": "productsAPIsTemplate",
+           "type": "Microsoft.Resources/deployments",
+           "properties": {
+             "mode": "Incremental",
+             "templateLink": {
+                "uri":"[concat(parameters('TemplatesStorageAccount'), '/skdev--apis.template.json', parameters('TemplatesStorageAccountSASToken'))]",
+                "contentVersion":"1.0.0.0"
+             },
+             "parameters": {
+                "APIManagementInstanceName": {"value": "[parameters('APIManagementInstanceName')]" }
+              }
+           }
+        }
+    ]
+  }

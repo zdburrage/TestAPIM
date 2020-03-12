@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApimServiceName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "properties": {
+        "description": "ServiceKingWebServices",
+        "resourceId": "https://management.azure.com/subscriptions/af9801ef-4ac6-4257-9592-0db6650e1fd8/resourceGroups/skdev-webservices-internal-southcentralus-rg/providers/Microsoft.Web/sites/ServiceKingWebServices",
+        "credentials": {
+          "header": {
+            "x-functions-key": [
+              "{{servicekingwebservices-key}}"
+            ]
+          }
+        },
+        "url": "https://servicekingwebservices.azurewebsites.net/api",
+        "protocol": "http"
+      },
+      "name": "[concat(parameters('ApimServiceName'), '/servicekingwebservices')]",
+      "type": "Microsoft.ApiManagement/service/backends",
+      "apiVersion": "2019-01-01"
+    },
+    {
+      "properties": {
+        "description": "SKTestAPI",
+        "resourceId": "https://management.azure.com/subscriptions/af9801ef-4ac6-4257-9592-0db6650e1fd8/resourceGroups/ZacTest/providers/Microsoft.Web/sites/SKTestAPI",
+        "credentials": {
+          "header": {
+            "x-functions-key": [
+              "{{sktestapi-key}}"
+            ]
+          }
+        },
+        "url": "https://sktestapi.azurewebsites.net/api",
+        "protocol": "http"
+      },
+      "name": "[concat(parameters('ApimServiceName'), '/sktestapi')]",
+      "type": "Microsoft.ApiManagement/service/backends",
+      "apiVersion": "2019-01-01"
+    }
+  ]
+}
